@@ -42,14 +42,18 @@ public class DriverFriendServer {
                 sOut = new DataOutputStream(client.getOutputStream());
                 String line = sIn.readUTF();
                 System.out.println(line);
-                switch (line) {
-                    case "fillingspinner":
-                        ConnectionWithDataBase connectionWithDataBase =
-                                new ConnectionWithDataBase("fillingspinner");
-                        result = connectionWithDataBase.getLineOut();
+                if (line.equals("aaa")) {
+                    ConnectionWithDataBase connectionWithDataBase =
+                            new ConnectionWithDataBase(line);
+                    line = connectionWithDataBase.getLineOut();
                 }
-                assert result != null;
-                sOut.writeUTF(result);
+//                String[] s = line.split(":");
+//                if (s[0].equals("insert")) {
+//                    ConnectionWithDataBase connectionWithDataBase =
+//                            new ConnectionWithDataBase(s[1]+":"+s[2]+":"+s[3]);
+//                }
+//                assert result != null;
+                sOut.writeUTF(line);
                 sOut.flush();
             } catch (Exception e) {
                 e.printStackTrace();
