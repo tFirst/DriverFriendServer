@@ -4,6 +4,7 @@ public class ConnectionWithDataBase {
 
     private static Connection connection;
     private String lineOut;
+    private int lineIntOut;
 
     ConnectionWithDataBase(String action, String args) throws SQLException {
         connection = getConnection();
@@ -17,20 +18,19 @@ public class ConnectionWithDataBase {
 
     public static Connection getConnection() throws SQLException {
         DriverManager.registerDriver(new com.mysql.jdbc.Driver());
-        return DriverManager.getConnection("jdbc:mysql://90.189.192.217:3306/sv", "sv", "6fBwWohC");
+        //return DriverManager.getConnection("jdbc:mysql://90.189.192.217:3306/sv", "sv", "6fBwWohC");
+        return DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/sv", "root", "");
     }
 
     private void selectFromTypesOfEvents(String type) throws SQLException {
-        String line = "";
         PreparedStatement preparedStatement =
-                connection.prepareStatement("select id from TypesOfEvents where name = ?");
+                connection.prepareStatement("select id from typesofevents where name = ?");
         preparedStatement.setString(1, type);
         ResultSet resultSet = preparedStatement.executeQuery();
         System.out.println("Getted the response...");
         while (resultSet.next()) {
-            line = resultSet.getString("id");
+            this.lineIntOut = resultSet.getInt("id");
         }
-        this.lineOut = line;
     }
 
     public void selectFromTable(String line) throws SQLException {
@@ -52,9 +52,9 @@ public class ConnectionWithDataBase {
         PreparedStatement preparedStatement;
         if (s[2].equals("address")) {
             preparedStatement =
-                    connection.prepareStatement("select address from Events where type = ?");
+                    connection.prepareStatement("select address from events where type = ?");
             selectFromTypesOfEvents(s[3]);
-            preparedStatement.setInt(1, Integer.parseInt(getLineOut()));
+            preparedStatement.setInt(1, getLineIntOut());
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next())
                 line += resultSet.getString("address") + ",";
@@ -62,7 +62,7 @@ public class ConnectionWithDataBase {
         }
         else if (s[2].equals("description")) {
             preparedStatement =
-                    connection.prepareStatement("select description from Events where type = ?");
+                    connection.prepareStatement("select description from events where type = ?");
             selectFromTypesOfEvents(s[3]);
             preparedStatement.setInt(1, Integer.parseInt(getLineOut()));
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -84,7 +84,7 @@ public class ConnectionWithDataBase {
     private void insertIntoEvents(String[] s) throws SQLException {
         int resIdType = 0, resCount = 0;
         PreparedStatement preparedStatement =
-                connection.prepareStatement("select id from Events order by id");
+                connection.prepareStatement("select id from events order by id");
         ResultSet resultSet = preparedStatement.executeQuery();
         if (resultSet.last()) {
             resCount = resultSet.getInt("id");
@@ -94,19 +94,25 @@ public class ConnectionWithDataBase {
         System.out.println(resCount);
         preparedStatement.close();
         preparedStatement =
-                connection.prepareStatement("select id from TypesOfEvents where name = ?");
+                connection.prepareStatement("select id from typesofevents where name = ?");
         preparedStatement.setString(1, s[1]);
+        System.out.println(s[1]);
         resultSet = preparedStatement.executeQuery();
         while (resultSet.next()) {
             resIdType = resultSet.getInt("id");
         }
         preparedStatement.close();
         preparedStatement =
-                connection.prepareStatement("insert into Events (id, type, address, description) values (?, ?, ?, ?)");
+                connection.prepareStatement
+                                ("insert into events " +
+                                        "(id, type, address, description, latitude, longitude) " +
+                                        "values (?, ?, ?, ?, ?, ?)");
         preparedStatement.setInt(1, resCount+1);
         preparedStatement.setInt(2, resIdType);
         preparedStatement.setString(3, s[2]);
         preparedStatement.setString(4, s[3]);
+        preparedStatement.setDouble(5, Double.parseDouble(s[4]));
+        preparedStatement.setDouble(6, Double.parseDouble(s[5]));
         preparedStatement.executeUpdate();
         preparedStatement.close();
         System.out.println("Insert into Events!!!");
@@ -126,7 +132,7 @@ public class ConnectionWithDataBase {
         System.out.println(resCount);
         preparedStatement.close();
         preparedStatement =
-                connection.prepareStatement("select id from TypesOfEvents where name = ?");
+                connection.prepareStatement("select id from typesofevents where name = ?");
         preparedStatement.setString(1, s[1]);
         resultSet = preparedStatement.executeQuery();
         while (resultSet.next()) {
@@ -146,4 +152,6 @@ public class ConnectionWithDataBase {
     }
 
     public String getLineOut() { return lineOut; }
+
+    public int getLineIntOut() { return lineIntOut; }
 }

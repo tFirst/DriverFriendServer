@@ -44,7 +44,7 @@ public class DriverFriendServer {
                 System.out.println(line);
                 String[] s = line.split(":");
                 ConnectionWithDataBase connectionWithDataBase =
-                        new ConnectionWithDataBase(s[0], s[1]+":"+s[2]+":"+s[3]+":"+s[4]);
+                        new ConnectionWithDataBase(s[0], s[1]+":"+s[2]+":"+s[3]+":"+s[4]+":"+s[5]+":"+s[6]);
                 result = connectionWithDataBase.getLineOut();
                 sOut.writeUTF(result);
                 sOut.flush();
