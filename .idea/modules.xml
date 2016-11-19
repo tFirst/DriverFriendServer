@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/ServerAgain.iml" filepath="$PROJECT_DIR$/ServerAgain.iml" />
+      <module fileurl="file://$PROJECT_DIR$/DriverFriendServer.iml" filepath="$PROJECT_DIR$/DriverFriendServer.iml" />
     </modules>
   </component>
 </project>

@@ -6,12 +6,12 @@ import java.net.Socket;
 /**
  * Created by Stanislav Trushin on 18.11.2016.
  */
-public class Server {
+public class DriverFriendServer {
     private ServerSocket server;
     private Socket client;
 
     public static void main(String[] args) {
-        new Server().start();
+        new DriverFriendServer().start();
     }
 
     public void start() {
