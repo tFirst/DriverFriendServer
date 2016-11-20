@@ -3,9 +3,6 @@ import java.io.DataOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-/**
- * Created by Stanislav Trushin on 18.11.2016.
- */
 public class DriverFriendServer {
     private ServerSocket server;
     private Socket client;
@@ -26,7 +23,7 @@ public class DriverFriendServer {
         }
     }
 
-    class ClientHandler extends Thread {
+    public class ClientHandler extends Thread {
         private DataOutputStream sOut;
         private DataInputStream sIn;
         private Socket client;
@@ -43,11 +40,20 @@ public class DriverFriendServer {
                 String line = sIn.readUTF();
                 System.out.println(line);
                 String[] s = line.split(":");
-                ConnectionWithDataBase connectionWithDataBase =
-                        new ConnectionWithDataBase(s[0], s[1]+":"+s[2]+":"+s[3]+":"+s[4]+":"+s[5]+":"+s[6]);
-                result = connectionWithDataBase.getLineOut();
-                sOut.writeUTF(result);
-                sOut.flush();
+                if (!s[0].equals("selectmarkers")) {
+                    ConnectionWithDataBase connectionWithDataBase =
+                            new ConnectionWithDataBase(s[0], s[1] + ":" + s[2] + ":" + s[3] + ":" + s[4] + ":" + s[5] + ":" + s[6]);
+                    result = connectionWithDataBase.getLineOut();
+                    sOut.writeUTF(result);
+                    sOut.flush();
+                }
+                else {
+                    ConnectionWithDataBase connectionWithDataBase =
+                            new ConnectionWithDataBase();
+                    String string = connectionWithDataBase.selectMarkers();
+                    sOut.writeUTF(string);
+                    sOut.flush();
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
