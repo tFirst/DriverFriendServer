@@ -38,7 +38,6 @@ public class DriverFriendServer {
                 sIn = new DataInputStream(client.getInputStream());
                 sOut = new DataOutputStream(client.getOutputStream());
                 String line = sIn.readUTF();
-                System.out.println(line);
                 String[] s = line.split(":");
                 if (!s[0].equals("selectmarkers")) {
                     ConnectionWithDataBase connectionWithDataBase =
